@@ -1,0 +1,83 @@
+openapi: 3.0.0
+paths:
+  /repos/{username}:
+    get:
+      operationId: RepositoryViewerController_getRepositories
+      parameters:
+        - name: username
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User repository was successfully fetched
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RepositoriesWithBranches'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '406':
+          description: Incorrect Accept header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - repos
+info:
+  title: Git Service Repository Viewer
+  description: Git Service Repository Viewer API Documentation
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas:
+    Branch:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the branch
+        lastCommit:
+          type: string
+          description: Last commit sha of the branch
+      required:
+        - name
+        - lastCommit
+    RepositoriesWithBranches:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the repository
+        ownerLogin:
+          type: string
+          description: Owner of the repository
+        branches:
+          description: Branches of the repository
+          type: array
+          items:
+            $ref: '#/components/schemas/Branch'
+      required:
+        - name
+        - ownerLogin
+        - branches
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: number
+        Message:
+          type: string
+      required:
+        - status
+        - Message
