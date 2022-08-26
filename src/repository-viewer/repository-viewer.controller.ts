@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { RepositoryViewerService } from './repository-viewer.service';
 import {
   ApiOkResponse,
@@ -9,8 +9,10 @@ import {
 import { SupportedGitServices } from '../common/types';
 import { RepositoriesWithBranches } from '../common/dto/RepositoriesWithBranches.entity';
 import { ErrorResponse } from '../common/dto/ErrorResponse.entity';
+import { AcceptHeaderGuard } from '../common/guards/AcceptHeaderGuard';
 
 @ApiTags('repos')
+@UseGuards(AcceptHeaderGuard)
 @Controller('repos')
 export class RepositoryViewerController {
   constructor(private service: RepositoryViewerService) {}
